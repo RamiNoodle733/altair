@@ -65,6 +65,10 @@ requirejs.config({
         }
     });
     {% endif %}
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "{{ output_div }}") {
+      outputDiv = document.getElementById("{{ output_div }}");
+    }
     {% if requirejs -%}
     require(['vega-embed'],
     {%- else -%}
@@ -82,9 +86,8 @@ requirejs.config({
                           + '</div>');
           throw error;
       }
-      const el = document.getElementById('{{ output_div }}');
-      vegaEmbed("#{{ output_div }}", spec, embedOpt)
-        .catch(error => showError(el, error));
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(error => showError(outputDiv, error));
     }){% if not requirejs %}(vegaEmbed){% endif %};
 
   </script>
