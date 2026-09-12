@@ -158,7 +158,10 @@ class InlineParser(_InlineParser):
             https://shopify.github.io/liquid/
         """
         text = _RE_LIQUID_INCLUDE.sub(r"", text)
-        super().process_text(text, state, parse_emphasis=parse_emphasis)
+        if parse_emphasis:
+            super().process_text(text, state)
+        else:
+            super().process_text(text, state, parse_emphasis=False)
 
 
 def read_ast_tokens(source: Url | Path, /) -> list[Token]:
