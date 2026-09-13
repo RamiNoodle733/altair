@@ -46,6 +46,21 @@ def test_plugin_registry():
     )
 
 
+def test_plugin_registry_unregister_active():
+    plugins = TypedCallableRegistry()
+    plugin = lambda x: x**2
+    plugins.register("new_plugin", plugin)
+    plugins.enable("new_plugin", exponent=2)
+
+    unregistered = plugins.register("new_plugin", None)
+
+    assert unregistered is plugin
+    assert plugins.names() == []
+    assert plugins.active == ""
+    assert plugins.get() is None
+    assert plugins.options == {}
+
+
 def test_plugin_registry_extra_options():
     plugins = GeneralCallableRegistry()
 
