@@ -46,6 +46,35 @@ def test_plugin_registry():
     )
 
 
+def test_unregister_active_plugin_clears_state():
+    plugins = GeneralCallableRegistry()
+    plugin = lambda x, p=2: x**p
+
+    plugins.register("custom", plugin)
+    plugins.enable("custom", p=3)
+
+    assert plugins.register("custom", None) is plugin
+    assert plugins.names() == []
+    assert plugins.active == ""
+    assert plugins.options == {}
+    assert plugins.get() is None
+
+
+def test_unregister_inactive_plugin_preserves_active_state():
+    plugins = GeneralCallableRegistry()
+    active_plugin = lambda x: x
+
+    plugins.register("active", active_plugin)
+    plugins.register("inactive", lambda x: x**2)
+    plugins.enable("active")
+
+    plugins.register("inactive", None)
+
+    assert plugins.names() == ["active"]
+    assert plugins.active == "active"
+    assert plugins.get() is active_plugin
+
+
 def test_plugin_registry_extra_options():
     plugins = GeneralCallableRegistry()
 
