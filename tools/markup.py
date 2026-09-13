@@ -157,10 +157,8 @@ class InlineParser(_InlineParser):
         .. _liquid:
             https://shopify.github.io/liquid/
         """
-        token: Token = {"type": "text", "raw": _RE_LIQUID_INCLUDE.sub(r"", text)}
-        if not parse_emphasis:
-            token["_emphasis"] = False
-        state.append_token(token)
+        text = _RE_LIQUID_INCLUDE.sub(r"", text)
+        super().process_text(text, state, parse_emphasis=parse_emphasis)
 
 
 def read_ast_tokens(source: Url | Path, /) -> list[Token]:
