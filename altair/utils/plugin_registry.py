@@ -164,7 +164,12 @@ class PluginRegistry(Generic[PluginT, R]):
             The plugin that was registered or unregistered.
         """
         if value is None:
-            return self._plugins.pop(name, None)
+            plugin = self._plugins.pop(name, None)
+            if self._active_name == name:
+                self._active = None
+                self._active_name = ""
+                self._options = {}
+            return plugin
         elif self.plugin_type(value):
             self._plugins[name] = value
             return value
